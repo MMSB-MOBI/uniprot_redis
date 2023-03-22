@@ -49,6 +49,7 @@ class UniprotDatum(BaseModel):
     taxid: int
     sequence : str
     go : List[GODatum]
+    subcellular_location : List[str]
 
 class SecondaryId(BaseModel):
     id: UniprotAC

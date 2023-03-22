@@ -46,7 +46,8 @@ class UniprotStore():
                     gene_name=prot.geneName,
                     taxid=prot.taxid,
                     sequence=prot.sequence,
-                    go = gos)
+                    go = gos,
+                    subcellular_location = prot.subcellular_location)
             except ValidationError as e:
                 print(f"Validation failed for {prot.id}: {str(e)}", file=stderr)
                 continue
