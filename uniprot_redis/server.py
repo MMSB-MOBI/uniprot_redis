@@ -10,7 +10,7 @@ from .store import UniprotStore
 from .store.schemas import UniprotAC
 
 class UniprotRequest(BaseModel) : 
-    uniprotIDs : List[UniprotAC]
+    uniprotIDs : List[str]
 
 app = FastAPI()
 origins = ["*"]

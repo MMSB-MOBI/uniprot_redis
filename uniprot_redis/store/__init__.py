@@ -122,6 +122,10 @@ class UniprotStore():
         for k in self.base_store.list_key(model=GODatum, skip_prefix=True):
             yield k
 
+    @property
+    def collections(self):
+        return self.base_store.list_key(model=UniprotCollection, skip_prefix=True)
+
     def get_protein(self, uniprot_id):
         try:
             correspondance_obj = self.base_store.get(uniprot_id, SecondaryId)
@@ -138,6 +142,10 @@ class UniprotStore():
     def get_proteins(self, uniprot_ids): 
         resp = {}
         for uniprot_id in uniprot_ids:
+            try :
+                UniprotAC.validate(uniprot_id)
+            except:
+                print(f"WARN : {uniprot_id} is not uniprot accession")
             resp[uniprot_id] = self.get_protein(uniprot_id)
         return resp
 
