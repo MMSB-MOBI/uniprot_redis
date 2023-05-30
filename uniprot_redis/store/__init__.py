@@ -140,12 +140,16 @@ class UniprotStore():
         pass
 
     def get_proteins(self, uniprot_ids): 
+        print("# uniprot_redis get_proteins")
         resp = {}
         for uniprot_id in uniprot_ids:
             try :
                 UniprotAC.validate(uniprot_id)
             except:
                 print(f"WARN : {uniprot_id} is not uniprot accession")
+                resp[uniprot_id] = None
+                continue
+            
             resp[uniprot_id] = self.get_protein(uniprot_id)
         return resp
 
