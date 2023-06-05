@@ -42,7 +42,7 @@ async def get_protein(uniprot_id: UniprotAC):
 
 @app.post('/uniprots')
 async def get_proteins(uniprot_request : UniprotRequest):
-    print("get proteins", uniprot_request.uniprotIDs)
+    print("get proteins", len(uniprot_request.uniprotIDs))
     return store.get_proteins(uniprot_request.uniprotIDs)
 
 @app.post('/collection_scan')

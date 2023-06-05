@@ -140,24 +140,36 @@ class UniprotStore():
         pass
 
     def get_proteins(self, uniprot_ids): 
-        print("# uniprot_redis get_proteins")
-        resp = {}
+        print("# uniprot_redis get_proteins", len(uniprot_ids))
+        resp = {'found' : {}, 'not_found' : {'contaminants' : 0, 'unformatted': [], 'not_in_uniprot': []}}
         for uniprot_id in uniprot_ids:
             try :
                 UniprotAC.validate(uniprot_id)
             except:
                 print(f"WARN : {uniprot_id} is not uniprot accession")
-                resp[uniprot_id] = None
+                if uniprot_id == 'sp' : 
+                    resp['not_found']['contaminants'] += 1
+                else : 
+                    resp['not_found']['unformatted'].append(uniprot_id)
                 continue
             
-            resp[uniprot_id] = self.get_protein(uniprot_id)
+            protein_obj = self.get_protein(uniprot_id)
+            if not protein_obj : 
+                resp['not_found']['not_in_uniprot'].append(uniprot_id)
+            else:
+                resp['found'][uniprot_id] = protein_obj
+        
+        print(len(resp['found']), 'proteins found')
+        print(len(resp['not_found']['not_in_uniprot']), 'proteins not found', resp['not_found']['not_in_uniprot'])
+        print(resp['not_found']['contaminants'], 'contaminants')
+        print(len(resp['not_found']['unformatted']), 'unformatted proteins')
         return resp
 
     def get_collections_from_prots(self, uniprot_ids):
         coll_for_prots = {}
         for coll_name, coll_content in self.list_collection():
-            coll_for_prots[coll_name] = len(set(coll_content).intersection(set(uniprot_ids)))
-            
+            coll_for_prots[coll_name] = set(coll_content).intersection(set(uniprot_ids))
+        
         return coll_for_prots
         
     
