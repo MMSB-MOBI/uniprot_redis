@@ -50,6 +50,9 @@ class UniprotDatum(BaseModel):
     sequence : str
     go : List[GODatum]
     subcellular_location : List[str]
+    
+    def __hash__(self):
+        return hash(self.id)
 
 class SecondaryId(BaseModel):
     id: UniprotAC
