@@ -8,7 +8,6 @@ class UniprotStoreDummy():
     """
     def __init__(self):
         self.wipe_all()
-        print("Youppi")
     
     def wipe_all(self):
         self._store = { 'GO_data'            : {},
