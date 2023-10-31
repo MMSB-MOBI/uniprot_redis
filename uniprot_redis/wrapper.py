@@ -1,3 +1,4 @@
+from pyrediscore.redantic import StoreKeyNotFound
 class Collector:
     """
     A single collection wrapper for easy multi type access
@@ -18,7 +19,10 @@ class Collector:
             if coll_id == coll_name:
                 self.uniprot_acs = coll_elems
                 return
-            
+        raise StoreKeyNotFound(f"No collection named {coll_name} in provided store")
+    def __len__(self):
+        return len(self.uniprot_acs)
+
     def __getitem__(self, subscript):
         if type(subscript) is str:
             if not subscript in self.uniprot_acs:
@@ -47,6 +51,6 @@ class Collector:
             raise IndexError(f"higher bound slice {subscript.stop} is greater than iterable {size}")
         raise IndexError(f"index {subscript} is greater than iterable {size}")
 
-    def __iterator__(self, subscript):
+    def __iterator__(self):
         for datum in self.store.get_protein_collection(self.name):
             yield datum
