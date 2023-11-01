@@ -12,6 +12,7 @@ class Collector:
         self.store = store
         self.name = coll_name
         self.uniprot_acs = None
+
         colls =  self.store.list_collection()
         if not colls:
             raise ValueError("Store has no collection")
@@ -20,6 +21,8 @@ class Collector:
                 self.uniprot_acs = coll_elems
                 return
         raise StoreKeyNotFound(f"No collection named {coll_name} in provided store")
+       
+
     def __len__(self):
         return len(self.uniprot_acs)
 
@@ -51,6 +54,14 @@ class Collector:
             raise IndexError(f"higher bound slice {subscript.stop} is greater than iterable {size}")
         raise IndexError(f"index {subscript} is greater than iterable {size}")
 
-    def __iterator__(self):
-        for datum in self.store.get_protein_collection(self.name):
-            yield datum
+    def __iter__(self):
+        self.icurr_ac = 0
+        return self
+    def __next__(self):
+        if self.icurr_ac >= len(self.uniprot_acs):
+            raise StopIteration
+        curr_ac = self.uniprot_acs[self.icurr_ac]
+        self.icurr_ac += 1
+        return self.store.get_protein(curr_ac)
+
+        #return self.store.get_protein_collection(self.name)
