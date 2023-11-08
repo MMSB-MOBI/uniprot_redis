@@ -1,4 +1,5 @@
 from pyrediscore.redantic import StoreKeyNotFound
+from .store.schemas import UniprotAC
 class Collector:
     """
     A single collection wrapper for easy multi type access
@@ -53,6 +54,11 @@ class Collector:
                 raise IndexError(f"lower bound slice {subscript.start} is greater than iterable {size}")
             raise IndexError(f"higher bound slice {subscript.stop} is greater than iterable {size}")
         raise IndexError(f"index {subscript} is greater than iterable {size}")
+    
+    def index_of(self, ac:UniprotAC):
+        """ Returns position in collection of the provided uniprotAC """
+        return  self.uniprot_acs.index(ac)
+        
 
     def __iter__(self):
         self.icurr_ac = 0
