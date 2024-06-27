@@ -1,6 +1,6 @@
 import string
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, Literal
 from uuid import uuid4
 import re
 from typing import List
@@ -50,7 +50,7 @@ class UniprotDatum(BaseModel):
     sequence : str
     go : List[GODatum]
     subcellular_location : List[str]
-    
+    review_level : Literal['TrEMBL', 'Swiss-Prot']
     def __hash__(self):
         return hash(self.id)
 

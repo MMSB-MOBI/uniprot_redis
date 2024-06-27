@@ -1,6 +1,6 @@
 from pyrediscore.redantic import RedisStore, KeyStoreError, StoreKeyNotFound
 from .schemas import GODatum, UniprotDatum, SecondaryId, UniprotCollection, UniprotAC
-from pyproteinsext import uniprot as pExt
+from unyprot import create_uniprot_collection_from_xml_file, create_uniprot_collection_from_xml_stream
 from pydantic import ValidationError
 from sys import stderr
 from typing import List
@@ -22,9 +22,9 @@ class UniprotStore():
         if not file and not stream:
             raise ValueError("please provide XML source with the file or stream arguments")
         if file:   
-            collection = pExt.EntrySet(collectionXML=file)
+            collection = create_uniprot_collection_from_xml_file(file)
         else:
-            collection = pExt.EntrySet(streamXML=stream)
+            collection = create_uniprot_collection_from_xml_stream(stream)
             
         for prot in collection:
             #print(prot.id, prot.AC)
@@ -47,7 +47,8 @@ class UniprotStore():
                     taxid=prot.taxid,
                     sequence=prot.sequence,
                     go = gos,
-                    subcellular_location = prot.subcellular_location)
+                    subcellular_location = prot.subcellular_location,
+                    review_level = prot.dataset )
             except ValidationError as e:
                 print(f"Validation failed for {prot.id}: {str(e)}", file=stderr)
                 continue
