@@ -41,6 +41,10 @@ class GODatum(BaseModel):
     evidence: str
     term: str
 
+class UniprotKeyWord(BaseModel):
+    id: str
+    term: str
+
 class UniprotDatum(BaseModel):
     id: UniprotAC
     full_name: str
@@ -51,6 +55,7 @@ class UniprotDatum(BaseModel):
     go : List[GODatum]
     subcellular_location : List[str]
     review_level : Literal['TrEMBL', 'Swiss-Prot']
+    keywords : List[UniprotKeyWord]
     def __hash__(self):
         return hash(self.id)
 

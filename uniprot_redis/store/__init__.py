@@ -1,5 +1,5 @@
 from pyrediscore.redantic import RedisStore, KeyStoreError, StoreKeyNotFound
-from .schemas import GODatum, UniprotDatum, SecondaryId, UniprotCollection, UniprotAC
+from .schemas import GODatum, UniprotKeyWord, UniprotDatum, SecondaryId, UniprotCollection, UniprotAC
 from unyprot import create_uniprot_collection_from_xml_file, create_uniprot_collection_from_xml_stream
 from pydantic import ValidationError
 from sys import stderr
@@ -39,6 +39,11 @@ class UniprotStore():
                 except KeyStoreError:
                     #print("Already in db", go.id)
                     pass
+            kws = []
+            for kw in prot.KW:
+                kws.append(UniprotKeyWord(id = kw.id, term = kw.term))
+                
+                            
             try :
                 obj = UniprotDatum(id=prot.id, 
                     full_name=prot.fullName, 
@@ -47,6 +52,7 @@ class UniprotStore():
                     taxid=prot.taxid,
                     sequence=prot.sequence,
                     go = gos,
+                    keywords = kws,
                     subcellular_location = prot.subcellular_location,
                     review_level = prot.dataset )
             except ValidationError as e:

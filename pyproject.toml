@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "uniprot_redis"
-version = "1.7.0"
+version = "1.8.0"
 description = ""
 authors = ["Guillaume Launay <pitooon@gmail.com>", "Cecile Hilpert <cecile.hilpert@gmail.com>"]
 
